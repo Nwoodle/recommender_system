@@ -11,9 +11,15 @@ except:
 
 #%%
 import csv
+import matplotlib.pyplot as plt
 
 data_filename = "amazon_reviews_us_Gift_Card_v1_00.tsv"
 
+#%% [markdown]
+
+# # Homework 1 - Renjie Zhu - A53266114
+
+# Data parsing using ```csv.DictReader```.
 
 #%%
 data = []
@@ -27,8 +33,6 @@ with open(data_filename, newline="") as data_file:
     for row in reader:
         data.append(row)
 
-#%%
-print(data[0])
 
 #%%
 rating = {}
@@ -40,7 +44,22 @@ for ele in data:
     else:
         rating[ele["star_rating"]] += 1
 
+
+#%% [markdown]
+
+# 1. As shown in the above cell, 
+# 5 stars : 129028,
+# 4 stars : 9807,
+# 3 stars : 3146,
+# 2 stars : 1559,
+# 1 stars : 4765,
+
+
 #%%
-rating
+rating_list = [(k,v) for k,v in rating.items()]
+rating_list.sort()
+rts, nums = zip(*rating_list)
+plt.bar(rts,nums)
+
 
 #%%

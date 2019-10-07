@@ -1,14 +1,3 @@
-# To add a new cell, type '#%%'
-# To add a new markdown cell, type '#%% [markdown]'
-#%% Change working directory from the workspace root to the ipynb file location. Turn this addition off with the DataScience.changeDirOnImportExport setting
-# ms-python.python added
-import os
-try:
-	os.chdir(os.path.join(os.getcwd(), 'hw1'))
-	print(os.getcwd())
-except:
-	pass
-
 #%%
 import csv
 import numpy as np
@@ -79,23 +68,28 @@ plt.bar(rts,nums)
 # the review.
 
 #%%
-X = []
-R = []
 
-for ele in data:
-    x = np.ones(3)
-    if ele["verified_purchase"].upper() != "Y":
-        x[1] = 0
-    x[2] = len(ele["review_body"])
+def parse_XR(data):
+    X = []
+    R = []
 
-    X.append(x)
-    R.append(int(ele["star_rating"]))
+    for ele in data:
+        x = np.ones(3)
+        if ele["verified_purchase"].upper() != "Y":
+            x[1] = 0
+        x[2] = len(ele["review_body"])
 
-X = np.array(X)
-R = np.array(R)
+        X.append(x)
+        R.append(int(ele["star_rating"]))
+
+    X = np.array(X)
+    R = np.array(R)
+
+    return X, R
 
 
 #%%
+X, R = parse_XR(data)
 t_3 = sp.linalg.lstsq(X, R)
 
 #%%
@@ -142,3 +136,10 @@ train_set = data[:split]
 test_set = data[split:]
 
 #%%
+X_t, R_t = parse_XR(train_set)
+t_train = sp.linalg.lstsq(X_t[:,:2],R_t)
+print(f"For the 90% training set, we have theta_0 = {t_train[0][0]}, theta_1 = {t_train[0][1]}.")
+
+
+#%%
+

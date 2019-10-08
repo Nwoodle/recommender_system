@@ -222,7 +222,39 @@ plt.show
 
 
 #%%
+def parse_VR(data):
+    X = []
+    R = []
+
+    for ele in data:
+        x = np.ones(3)
+        x[1] = int(ele["star_rating"])
+        x[2] = len(ele["review_body"])
+        X.append(x)
+
+        if ele["verified_purchase"].upper() != "Y":
+            R.append(0)
+        else:
+            R.append(1)
+
+    X = np.array(X)
+    R = np.array(R)
+
+    return X, R
+
+
+#%%
+X_t, R_t = parse_VR(train_set)
+X_te, R_te = parse_VR(test_set)
 model = linear_model.LogisticRegression()
 model.fit(X_t, R_t)
+
+#%%
+
+pred_LR = model.predict(X_te)
+
+#%%
+corr = (pred_LR == R_te)
+sum(corr) / len(corr)
 
 #%%

@@ -175,9 +175,9 @@ pred_t = X_t[:,:2] @ t_train.reshape((2,1))
 mse_t = np.mean((R_t.reshape((-1,1)) - pred_t) ** 2)
 
 #%%
-X_test, R_test = parse_XR(test_set)
-pred_test = X_test[:,:2] @ t_train.reshape((2,1))
-mse_test = np.mean((R_test.reshape((-1,1)) - pred_test) ** 2)
+X_te, R_te = parse_XR(test_set)
+pred_te = X_te[:,:2] @ t_train.reshape((2,1))
+mse_test = np.mean((R_te.reshape((-1,1)) - pred_te) ** 2)
 
 #%%
 def train_predict(data, per):
@@ -254,7 +254,58 @@ model.fit(X_t, R_t)
 pred_LR = model.predict(X_te)
 
 #%%
-corr = (pred_LR == R_te)
-sum(corr) / len(corr)
+correct_pred = (pred_LR == R_te)
+accuracy = sum(correct_pred) / len(correct_pred)
+print(f"The prediction accuracy is {accuracy*100}.")
+
+label_p = sum(R_te) / len(R_te)
+pred_p = sum(pred_LR) / len(R_te)
+print(f"label positive: {label_p*100}, prediction positive: {pred_p*100}.")
+
+#%%
+def parse_own(data):
+    X = []
+    R = []
+
+    for ele in data:
+        x = np.ones(5)
+        x[1] = int(ele["star_rating"])
+        x[2] = len(ele["review_body"])
+        if int(ele["total_votes"]) > 0:
+            x[3] = int(ele["helpful_votes"]) / int(ele["total_votes"])
+        else:
+            x[3] = 0
+        x[4] = ele["review_body"].count("!")
+        X.append(x)
+
+        if ele["verified_purchase"].upper() != "Y":
+            R.append(0)
+        else:
+            R.append(1)
+
+    X = np.array(X)
+    R = np.array(R)
+
+    return X, R
+
+#%%
+X_t, R_t = parse_own(train_set)
+X_te, R_te = parse_own(test_set)
+model = linear_model.LogisticRegression()
+model.fit(X_t, R_t)
+
+#%%
+pred_LR = model.predict(X_te)
+
+correct_pred = (pred_LR == R_te)
+accuracy = sum(correct_pred) / len(correct_pred)
+print(f"The prediction accuracy is {accuracy*100}.")
+
+label_p = sum(R_te) / len(R_te)
+pred_p = sum(pred_LR) / len(R_te)
+print(f"label positive: {label_p*100}, prediction positive: {pred_p*100}.")
+
+#%%
+
 
 #%%

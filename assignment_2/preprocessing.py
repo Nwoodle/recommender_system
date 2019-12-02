@@ -38,6 +38,9 @@ def data_preprocessing(filename="get_it_done.csv"):
     data = data.loc[data["status"].isin(["Closed"])]
     data = data.loc[data["district"].isin([1,2,3,4,5,6,7,8,9])]
 
+    for zc in [92125,92134,92132,92147,92140]:
+        mask = data["zipcode"] == zc
+        data = data[~mask]
     # reference:
 
     # Hutto, C.J. & Gilbert, E.E. (2014). VADER: A Parsimonious 
@@ -80,3 +83,10 @@ def data_preprocessing(filename="get_it_done.csv"):
     dataset["logis_label"] = logistic_label.astype(int)
 
     return dataset
+
+def data_label(dataset):
+    """separate data and label"""
+    label = np.array(dataset.loc[:, dataset.columns=="logis_label"])
+    data = np.array(dataset.loc[:, dataset.columns!="logis_label"])
+    
+    return data, label

@@ -32,7 +32,7 @@ def train_test_validation(closed_data, train_frac=0.8):
     validation = remain.drop(test.index)
     return train, test, validation
 
-def data_preprocessing(filename="get_it_done.csv"):
+def data_preprocessing(timethresh=1.0, filename="get_it_done.csv"):
     """ return processed dataset (datframe) for classifier """
     data = pd.read_csv(filename)
     data = data.loc[data["status"].isin(["Closed"])]
@@ -79,7 +79,7 @@ def data_preprocessing(filename="get_it_done.csv"):
     dataset = pd.concat([prep_data, categorize_data], axis=1)
 
     # label 
-    logistic_label = data["lncase_age_days"] <= 1.0
+    logistic_label = data["lncase_age_days"] <= timethresh
     dataset["logis_label"] = logistic_label.astype(int)
 
     return dataset

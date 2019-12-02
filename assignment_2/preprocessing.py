@@ -32,15 +32,15 @@ def train_test_validation(closed_data, train_frac=0.8):
     validation = remain.drop(test.index)
     return train, test, validation
 
-def data_preprocessing(filename="get_it_done.csv"):
+def data_preprocessing(filename="get_it_done.csv", threshold=1.0):
     """ return processed dataset (datframe) for classifier """
     data = pd.read_csv(filename)
     data = data.loc[data["status"].isin(["Closed"])]
     data = data.loc[data["district"].isin([1,2,3,4,5,6,7,8,9])]
 
-    for zc in [92125,92134,92132,92147,92140]:
-        mask = data["zipcode"] == zc
-        data = data[~mask]
+    data["avg_agi"].replace('', np.nan, inplace=True)
+    data.dropna(subset=["avg_agi"], inplace=True)
+
     # reference:
 
     # Hutto, C.J. & Gilbert, E.E. (2014). VADER: A Parsimonious 
@@ -79,7 +79,7 @@ def data_preprocessing(filename="get_it_done.csv"):
     dataset = pd.concat([prep_data, categorize_data], axis=1)
 
     # label 
-    logistic_label = data["lncase_age_days"] <= 1.0
+    logistic_label = data["lncase_age_days"] <= threshold
     dataset["logis_label"] = logistic_label.astype(int)
 
     return dataset

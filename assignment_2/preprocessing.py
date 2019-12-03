@@ -33,13 +33,21 @@ def train_test_validation(closed_data, train_frac=0.8):
     return train, test, validation
 
 def data_preprocessing(filename="get_it_done.csv", threshold=1.0):
-    """ return processed dataset (datframe) for classifier """
+    """ return processed dataset (dataframe) for classifier """
     data = pd.read_csv(filename)
     data = data.loc[data["status"].isin(["Closed"])]
     data = data.loc[data["district"].isin([1,2,3,4,5,6,7,8,9])]
 
     data["avg_agi"].replace('', np.nan, inplace=True)
     data.dropna(subset=["avg_agi"], inplace=True)
+
+    # normalizing population data
+    white_per = data["white_pop2017"] / data["total_pop2017"]
+    afram_per = data["afram_pop2017"] / data["total_pop2017"]
+    hispa_per = data["hisp_pop2017"]  / data["total_pop2017"]
+    data["white_per"] = white_per
+    data["afram_per"] = afram_per
+    data["hispa_per"] = hispa_per
 
     # reference:
 
@@ -68,7 +76,7 @@ def data_preprocessing(filename="get_it_done.csv", threshold=1.0):
     data["com"] = com
     data["pos"] = pos
 
-    column_lst = ["total_pop2017", "white_pop2017", "afram_pop2017", "hisp_pop2017", "avg_agi", "neg", "neu", "com", "pos"]
+    column_lst = ["total_pop2017", "white_per", "afram_per", "hispa_per", "avg_agi", "neg", "neu", "com", "pos"]
     onehot_lst = ["service_name", "case_origin"]
     prep_data = data[column_lst]
 

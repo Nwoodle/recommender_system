@@ -50,3 +50,13 @@ data['case_record_type'].hist(figsize=(16,8))
 plt.title('Histogram of case type')
 plt.savefig('./fig/case_type_hist.png')
 
+# Generate and save histogram of average case day per type
+case_type = data['case_record_type'].unique()
+case_avg_days_per_type = [data['case_age_days'][data['case_record_type']==t].mean() for t in case_type]
+plt.figure(figsize=(18,8))
+plt.bar(np.arange(case_type.shape[0]), case_avg_days_per_type)
+plt.xlabel('Case Type')
+plt.ylabel('Average case days')
+plt.title('Average case days per case type')
+plt.xticks(np.arange(case_type.shape[0]), tuple(case_type))
+plt.savefig('./fig/avg_day_per_case_type.png')

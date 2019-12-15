@@ -1,0 +1,15 @@
+This is the code used for our project.
+Dataset download link: https://drive.google.com/file/d/1DBT-dl4xDDjG0jQmQlNQdQcegpt6x4qQ/view?usp=sharing
+
+File list:
+    |- dataset_statistics.py
+    |   code used for explore the statistics of the dataset.
+    |
+    |- train_evaluate_predict.py
+    |   code used for training and evaluating the predictor.
+    |
+    |- preprocessing.py
+    |   functions for preprocessing the dataset
+    |
+    |
+    |

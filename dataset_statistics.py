@@ -6,6 +6,8 @@ import nltk
 import matplotlib.pyplot as plt
 nltk.download('vader_lexicon')
 from nltk.sentiment.vader import SentimentIntensityAnalyzer 
+from wordcloud import WordCloud
+
 pp = pprint.PrettyPrinter(indent=4)
 # Load Dataset
 data = pd.read_csv('get_it_done.csv')
@@ -37,6 +39,24 @@ data["neg"] = neg
 data["neu"] = neu
 data["com"] = com
 data["pos"] = pos
+
+# Generate word cloud
+service_name = data['service_name'].values
+service_str = str()
+for name in service_name:
+    try:
+        service_str += " " + str(name)
+    except:
+        continue
+wordcloud = WordCloud(width=720, height=720, margin=0, background_color="white").generate(service_str)
+plt.figure(figsize=(18,18))
+plt.imshow(wordcloud, interpolation='bilinear')
+plt.axis("off")
+plt.margins(x=0, y=0)
+plt.savefig('./fig/word_cloud.png')
+
+
+
 
 # Print maximum case age days
 print(data['case_age_days'].max())

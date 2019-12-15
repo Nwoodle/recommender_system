@@ -11,5 +11,5 @@ File list:
     |- preprocessing.py
     |   functions for preprocessing the dataset
     |
-    |
-    |
+    |- stata_regression.do
+    |   stata code used for regression analysis
